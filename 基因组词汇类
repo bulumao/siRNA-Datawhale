@@ -1,0 +1,22 @@
+以下代码是筛选出出现频率大于最小阈值min_freq的词汇，line18中，freq.most_common(max_vocab - 1)会返回频率列表，且是降序排列。
+然后遍历该列表，保留大于阈值的词汇。
+注：@classmethod的作用是让create方法不需要创建实例便可直接调用
+
+
+
+class GenomicVocab:
+    def __init__(self, itos):
+        # 初始化词汇表，itos是一个词汇表列表
+        self.itos = itos
+        # 创建从词汇到索引的映射
+        self.stoi = {v: k for k, v in enumerate(self.itos)}
+        
+    @classmethod
+    def create(cls, tokens, max_vocab, min_freq):
+        # 创建词汇表类方法
+        # 统计每个token出现的频率
+        freq = Counter(tokens)
+        # 选择出现频率大于等于min_freq的token，并且最多保留max_vocab个token
+        itos = ['<pad>'] + [o for o, c in freq.most_common(max_vocab - 1) if c >= min_freq]
+        # 返回包含词汇表的类实例
+        return cls(itos)
