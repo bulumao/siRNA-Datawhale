@@ -1,0 +1,31 @@
+以上代码中我的理解是把基因序列t分割成长度为self.ngram的字串，并且每个字串的长度为self.stride，将第二个类方法是确保了序列的正确性。
+简单来讲，就是把基因序列按照5个为单位划分，每个单位又用两个基因分割。如果最后t的长度和self.ngram相等，就被写入到toks序列中，反之丢弃。
+
+
+
+
+class GenomicTokenizer:
+    def __init__(self, ngram=5, stride=2):
+        # 初始化分词器，设置n-gram长度和步幅
+        self.ngram = ngram
+        self.stride = stride
+        
+    def tokenize(self, t):
+        # 将输入序列转换为大写
+        t = t.upper()
+        
+        if self.ngram == 1:
+            # 如果n-gram长度为1，直接将序列转换为字符列表
+            toks = list(t)
+        else:
+            # 否则，按照步幅对序列进行n-gram分词
+            toks = [t[i:i+self.ngram] for i in range(0, len(t), self.stride) if len(t[i:i+self.ngram]) == self.ngram]
+        
+        # 如果最后一个分词长度小于n-gram，移除最后一个分词
+        if len(toks[-1]) < self.ngram:
+            toks = toks[:-1]
+        
+        # 返回分词结果
+        return toks
+
+
